@@ -1,0 +1,67 @@
+# 📦 Part 2 – Backup Automation
+
+## 🔹 Overview
+
+This solution implements a cost-efficient PostgreSQL backup system using:
+- Local database backup (`pg_dump`)
+- Compression using gzip
+- Storage in Amazon S3
+- Date-based organization
+- Retention policy for cleanup
+
+---
+
+## 🔹 How It Works
+
+### Step 1: Backup Creation
+- Uses `pg_dump` to take a full backup of PostgreSQL database
+- Backup file is generated in `.sql` format
+
+---
+
+### Step 2: Compression
+- Backup file is compressed using `gzip`
+- Reduces storage size significantly (~60–70%)
+
+---
+
+### Step 3: S3 Upload
+- Backup is uploaded to S3 bucket in structured format:
+
+
+- In this assignment, upload is performed via AWS Console
+
+---
+
+### Step 4: Retention Policy
+
+- Old backups are automatically deleted after **30 days**
+- Implemented using:
+  - Script-based cleanup (local)
+  - Can also be configured using S3 Lifecycle policies
+
+---
+
+## 🔹 Backup Structure
+
+
+---
+
+## 🔹 Cost Considerations
+
+- Uses only **Amazon S3 (low-cost storage)**
+- Compression reduces storage usage
+- No compute services used → **zero infrastructure cost**
+- Lifecycle policies can further reduce cost using Glacier storage
+
+---
+
+## 🔹 Key Benefits
+
+- Simple and easy to maintain
+- Low-cost backup solution
+- Scalable for growing data
+- Can be automated using cron or Airflow in production
+
+---
+
