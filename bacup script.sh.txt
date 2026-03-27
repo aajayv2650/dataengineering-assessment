@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# -----------------------------
+# CONFIGURATION
+# -----------------------------
+DB_NAME="testdb"
+DB_USER="postgres"
+BACKUP_DIR="./backups"
+DATE=$(date +%Y/%m/%d)
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+FILE_NAME="backup_$TIMESTAMP.sql"
+
+# -----------------------------
+# STEP 1: CREATE BACKUP
+# -----------------------------
+mkdir -p $BACKUP_DIR/$DATE
+
+pg_dump -U $DB_USER $DB_NAME > $BACKUP_DIR/$DATE/$FILE_NAME
+
+# -----------------------------
+# STEP 2: COMPRESS BACKUP
+# -----------------------------
+gzip $BACKUP_DIR/$DATE/$FILE_NAME
+
+# -----------------------------
+# STEP 3: (SIMULATED) S3 UPLOAD
+# -----------------------------
+echo "Upload this file to S3 path:"
+echo "backups/postgres/$DATE/$FILE_NAME.gz"
+
+# -----------------------------
+# STEP 4: RETENTION POLICY (DELETE >30 DAYS)
+# -----------------------------
+find $BACKUP_DIR -type f -mtime +30 -delete
+
+echo "Backup completed successfully"
